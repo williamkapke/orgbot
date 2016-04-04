@@ -20,6 +20,6 @@
   "dependencies": {
     "effd": "^1.4.8",
     "github": "^0.2.4",
-    "github-webhook-handler": "^0.5.0"
+    "github-webhook-handler": "https://github.com/williamkapke/github-webhook-handler#5f1f5927da96675166e44128b034cb07973846a4"
   }
 }
