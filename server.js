@@ -4,10 +4,11 @@ var port = process.env.PORT || 9207;
 var events = require('github-webhook-handler')({
   path: '/github',
   secret: process.env.WEBHOOK_SECRET,
-  emit: (headers, data)=>{
-    data.action = (data.action+'.'||'') + headers['x-github-event'];
+  emit: (headers, data)=> {
+    data.action = data.action? '.' + data.action : '';
+    data.action = headers['x-github-event'] + data.action;
     console.log(JSON.stringify(data, null, 2));
-    handler.emit(data.action, data);
+    events.emit(data.action, data);
   }
 });
 
