@@ -22,7 +22,7 @@
     "debug": "^2.6.1",
     "dotenv": "^4.0.0",
     "effd": "^1.4.8",
-    "get-then": "^1.0.0",
+    "get-then": "^1.1.1",
     "github": "https://github.com/williamkapke/node-github/tarball/org-blocks",
     "glob": "^7.1.1",
     "mentions-regex": "^2.0.3",
