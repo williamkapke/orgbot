@@ -14,7 +14,10 @@ Such as:
 Access to the GitHub API is much more granular. So, **orgbot** was created!
 It responds to GitHub webhook events to adding people to teams and to block
 guests that are unwanted.
-
+<br>
+<br>
+<br>
+<br>
 ## Managing Teams
 A goal of this bot was to also provide some transparency for visitors. A repo's
 README is used to list the team members. When the list changes, the bot syncs
@@ -49,7 +52,10 @@ process, will get picked up by the bot.
 When the bot receives the `push` event, it will do the same parsing + evaluating
 as when the PR was created/updated, but instead of creating a comment- it
 applies the additions AND removals to the team (if any).
-
+<br>
+<br>
+<br>
+<br>
 ## Blocking/Unblocking Users
 To use the bot to block users,
 
@@ -69,17 +75,21 @@ bully66,2018-03-16T18:00,Violated the CoC
 <sup>NOTE: `user22` in this example above has passed their timeout period</sup>
 
 The file:
-1) Works like a log file, records at the top are the oldest. New ones are added
+- Works like a log file, records at the top are the oldest. New ones are added
 to the bottom.
-2) If a user is listed more than once, the newest entry is only considered.
-3) No `expires` value, or an invalid one, means the block does not expire.
-4) If a user is blocked, but they are not listed, they remain blocked.
-5) Adding a user's name and a date in the past will cause an immediate unblock.
-6) Can be truncated. Lines can be removed.
-7) Not guaranteed to match the actual GitHub list of blocked users.
-8) Is evaluated for additions/removals:
-	a) On any commit
-	b) By executing `node sync-blocks` (via scheduled task)
+- If a user is listed more than once, the newest entry is only considered.
+- No `expires` value, or an invalid one, means the block does not expire.
+- If a user is blocked, but they are not listed, they remain blocked.
+- Adding a user's name and a date in the past will cause an immediate unblock.
+- Can be truncated. Lines can be removed.
+- Not guaranteed to match the actual GitHub list of blocked users.
+- Is evaluated for additions/removals:
+	- On any commit
+	- By executing `node sync-blocks` (via scheduled task)
+<br>
+<br>
+<br>
+<br>
 
 ## Setup
 
