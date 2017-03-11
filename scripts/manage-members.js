@@ -112,7 +112,7 @@ function findChangedMembers (org, teamName, mentions) {
       // get the usernames of the team members
       : github.orgs.getTeamMembers({ id: team.id, per_page: 100 })
       .then(github.allPages)
-      .then((members) => members.map((member) => member.login.toLocaleLowerCase()))
+      .then((members) => members.data.map((member) => member.login.toLocaleLowerCase()))
       .then((members) => ({
         org,
         id: team.id,

@@ -17,23 +17,23 @@ const prFiles = {
 const manageMembers = proxyquire('../scripts/manage-members.js', {
   '../github.js': {
     issues: {
-      getComments: () => P([]),
-      createComment: () => P(),
-      editComment: () => P()
+      getComments: () => P({ data: [] }),
+      createComment: () => P({ data: {} }),
+      editComment: () => P({ data: {} })
     },
     pullRequests: {
       getFiles: (options) => {
-        return P(prFiles[options.number])
+        return P({ data: prFiles[options.number] })
       }
     },
     orgs: {
-      getTeams: () => Promise.resolve([
+      getTeams: () => Promise.resolve({ data: [
         { name: 'foo', id: 111 },
         { name: 'bar', id: 222 },
         { name: 'botsters', id: 444 },
         { name: 'baz', id: 333 }
-      ]),
-      getTeamMembers: (options) => Promise.resolve(teamsMembers[options.id]),
+      ]}),
+      getTeamMembers: (options) => Promise.resolve({ data: teamsMembers[options.id] }),
       addTeamMembership: (options) => P((Ø) => {
         const members = teamsMembers[options.id]
         asyncish(() => {
@@ -52,7 +52,7 @@ const manageMembers = proxyquire('../scripts/manage-members.js', {
         })
       })
     },
-    find: (x) => (array) => Promise.resolve(array.find(x)),
+    find: (x) => (array) => Promise.resolve(array.data.find(x)),
     me: () => Promise.resolve({ login: 'hubbed' }),
     allPages: (x) => Promise.resolve(x),
     '@noCallThru': true
