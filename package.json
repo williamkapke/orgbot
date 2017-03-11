@@ -4,7 +4,7 @@
   "description": "a GitHub webhook bot",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test",
+    "test": "tap test/**/*.test.js",
     "start": "node server.js"
   },
   "repository": {
@@ -18,8 +18,22 @@
   },
   "homepage": "https://github.com/williamkapke/hookbot",
   "dependencies": {
+    "bl": "^1.2.0",
+    "debug": "^2.6.1",
+    "dotenv": "^4.0.0",
     "effd": "^1.4.8",
-    "github": "^0.2.4",
-    "github-webhook-handler": "https://github.com/williamkapke/github-webhook-handler#ab558d8d59f31de8ae9796922c3652851813dcda"
+    "get-then": "^1.0.0",
+    "github": "https://github.com/williamkapke/node-github/tarball/org-blocks",
+    "glob": "^7.1.1",
+    "mentions-regex": "^2.0.3",
+    "moment": "^2.17.1"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.7.11"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
   }
 }

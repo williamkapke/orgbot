@@ -1,0 +1,6 @@
+username,expires,note
+ghost,,This is a special account used by GitHub as a placeholder.
+spam,,A test for what happens when the is already blocked
+alreadyblocked,,A test for what happens when the is already blocked
+missing1,,A test for what happens when the user isn't found
+missing2,2016-01-01,A test for what happens when the user isn't found

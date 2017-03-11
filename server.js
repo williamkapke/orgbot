@@ -1,32 +1,76 @@
-var http = require('http');
-var port = process.env.PORT || 9207;
+'use strict'
 
-var events = require('github-webhook-handler')({
-  path: '/github',
-  secret: process.env.WEBHOOK_SECRET,
-  emit: (headers, data)=> {
-    data.action = data.action? '.' + data.action : '';
-    data.action = headers['x-github-event'] + data.action;
-    console.log(JSON.stringify(data, null, 2));
-    events.emit(data.action, data);
-  }
-});
+require('dotenv').load({ silent: true })
 
-http.createServer((req, res) =>
-  events(req, res, _=> {
-    res.statusCode = 404;
-    res.end('no such location')
+const http = require('http')
+const bl = require('bl')
+const glob = require('glob')
+const crypto = require('crypto')
+const debug = require('debug')('server')
+
+const url = process.env.WEBHOOK_URL || '/'
+const port = process.env.PORT || 3000
+const scripts = process.env.SCRIPTS || './scripts/**/*.js'
+const secret = process.env.GITHUB_WEBHOOK_SECRET
+
+const sign = (blob) => 'sha1=' + crypto.createHmac('sha1', secret).update(blob).digest('hex')
+
+http.ServerResponse.prototype.status = function (code, message) {
+  this.statusCode = code
+  this.statusMessage = message
+  return this
+}
+
+const app = http.createServer((req, res) => {
+  res.on('finish', () => {
+    console.log(`${req.method} ${req.url} => ${res.statusCode} ${res.statusMessage}`)
   })
-)
-.listen(port, _=>console.log('hookbot listening on port:', port));
 
-events.on('error', err =>
-  console.error('Error:', err.message)
-);
+  if (req.method !== 'POST' && req.url !== url) {
+    return res.status(404).end()
+  }
 
-require('fs').readdirSync('./scripts').forEach(file=>{
-  file = './scripts/' + file;
-  console.log('loading:', file);
-  require(file)(events);
-});
+  const event = req.headers['x-github-event']
+  const signature = req.headers['x-hub-signature']
 
+  if (!event) return res.status(400, 'Missing x-github-event Header').end()
+  if (!signature) return res.status(400, 'Missing x-hub-signature Header').end()
+
+  req.pipe(bl(function (err, data) {
+    if (err) return res.status(400, 'Error reading input').end()
+    if (secret && signature !== sign(data)) {
+      return res.status(400, 'Signature mismatch').end()
+    }
+
+    data = tryParseJSON(data)
+    if (!data) return res.status(400, 'Invalid JSON').end()
+
+    const repo = data.repository.name
+    const org = data.repository.owner.login || data.organization.login
+    data.action = data.action ? event + '.' + data.action : event
+    debug(data)
+
+    app.emit(data.action, data, org, repo)
+
+    res.end()
+  }))
+})
+.listen(port, () => {
+  console.log('orgbot listening on port', port)
+})
+
+// load the scripts
+glob.sync(scripts).forEach((file) => {
+  console.log('Loading:', file)
+  require(file)(app)
+})
+
+function tryParseJSON (data) {
+  data = String(data)
+  try {
+    return JSON.parse(data)
+  } catch (e) {
+    debug(data)
+    debug(e)
+  }
+}
