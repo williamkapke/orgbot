@@ -96,7 +96,7 @@ const createCommitComment = (sha, body) =>
     body
       ? debug('creating comment for %s\n%O', sha, () => body.split('\n')).then(() =>
           github.repos.createCommitComment({ owner: org, repo, sha, body })
-          .then(() => 'Done') // send back the message to be logged
+          .then(() => body) // send back the message to be logged
         )
       : P.done('No Changes')
 
