@@ -61,10 +61,10 @@ const manageMembers = proxyquire('../scripts/manage-members.js', {
     if (url === 'http://404') return P.accept({ statusCode: 404 })
     if (url === 'http://error') return P.reject(new Error())
     if (url === 'readme' || url === 'https://github.com/undefined/undefined/raw/undefined/README.md') {
-      return readFixture('README.md')
+      return readFixture('README.md').then((r) => Buffer.from(r))
     }
 
-    return P(url)
+    return P(Buffer.from(url))
   }
 })
 

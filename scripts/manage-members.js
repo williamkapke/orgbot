@@ -45,6 +45,7 @@ function onPullRequest (event, owner, repo) {
   .then((readme) => !readme ? P.error('README not modified') : readme.raw_url)
   // get the README and analyze it
   .then(get)
+  .then(String)
   .then(parseTeamSection)
   .then((team) => findChangedMembers(owner, team.name, team.mentions))
   .then(createMessageBody)
@@ -80,6 +81,7 @@ function onPush (event, org, repo) {
   if (!readme) return P.error('README not modified')
 
   return get(`https://github.com/${org}/${repo}/raw/${head.id}/${readme}`)
+  .then(String)
   .then(parseTeamSection)
   .then((team) => findChangedMembers(org, team.name, team.mentions))
   .then(updateMembers)
