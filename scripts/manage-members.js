@@ -15,7 +15,8 @@ const ignoredErrors = new Set([
   'Not Applicable',
   'No members changed',
   'Members section not found',
-  'Push is on non-default branch'
+  'Push is on non-default branch',
+  // 'README not modified'
 ])
 const logError = (err) => {
   if (ignoredErrors.has(err && err.message)) {
