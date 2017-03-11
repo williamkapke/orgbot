@@ -49,7 +49,7 @@ function onPullRequest (event, owner, repo) {
   .then(parseTeamSection)
   .then((team) => findChangedMembers(owner, team.name, team.mentions))
   .then(createMessageBody)
-  .then((message) =>
+  .then((body) =>
     // find a previous comment to update
     github.me()
     .then((me) =>
@@ -58,10 +58,10 @@ function onPullRequest (event, owner, repo) {
     )
     .then((comment) =>
       comment
-        ? github.issues.editComment({ owner, repo, id: comment.id, message })
-        : github.issues.createComment({ owner, repo, number, message })
+        ? github.issues.editComment({ owner, repo, id: comment.id, body })
+        : github.issues.createComment({ owner, repo, number, body })
     )
-    .then(() => message)
+    .then(() => body)
   )
 }
 
