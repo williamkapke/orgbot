@@ -22,8 +22,9 @@ http.ServerResponse.prototype.status = function (code, message) {
 }
 
 const app = http.createServer((req, res) => {
+  var action;
   res.on('finish', () => {
-    console.log(`${req.method} ${req.url} => ${res.statusCode} ${res.statusMessage}`)
+    console.log(`${req.method} ${req.url}#${action} => ${res.statusCode} ${res.statusMessage}`)
   })
 
   if (req.method !== 'POST' && req.url !== url) {
@@ -47,7 +48,7 @@ const app = http.createServer((req, res) => {
 
     const repo = data.repository.name
     const org = data.repository.owner.login || data.organization.login
-    data.action = data.action ? event + '.' + data.action : event
+    action = data.action = data.action ? event + '.' + data.action : event
     debug(data)
 
     app.emit(data.action, data, org, repo)
